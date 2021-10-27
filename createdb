@@ -1,0 +1,55 @@
+'''
+This script should only be run once. The script will connect to a POSTGRES database and create a table with
+the required schema if it doesn't exist.
+'''
+import psycopg2
+
+# Establish connection
+conn = psycopg2.connect(dbname="", user="postgres", password="")
+# Create cursor
+cursor = conn.cursor()
+
+# Drop table if exists
+cursor.execute("DROP TABLE IF EXISTS sales")
+# Create table
+sql = '''CREATE TABLE sales(
+    id CHAR(50) NOT NULL,
+    seller VARCHAR,
+    buyer VARCHAR,
+    price FLOAT,
+    timestamp VARCHAR,
+    class CHAR(50),
+    purity INT,
+    numMystic INT,
+    breedCount INT,
+    hp INT,
+    speed INT,
+    skill INT,
+    morale INT,
+    eyesD CHAR(50),
+    eyesR1 CHAR(50),
+    eyesR2 CHAR(50),
+    earsD CHAR(50),
+    earsR1 CHAR(50),
+    earsR2 CHAR(50),
+    hornD CHAR(50),
+    hornR1 CHAR(50),
+    hornR2 CHAR(50),
+    mouthD CHAR(50),
+    mouthR1 CHAR(50),
+    mouthR2 CHAR(50),
+    backD CHAR(50),
+    backR1 CHAR(50),
+    backR2 CHAR(50),
+    tailD CHAR(50),
+    tailR1 CHAR(50),
+    tailR2 CHAR(50),
+    geneQuality INT,
+    UNIQUE(id, timestamp)
+)'''
+# Execute table creation
+cursor.execute(sql)
+print("Table created succesfully")
+# Close cursor and connection
+conn.commit()
+conn.close()
