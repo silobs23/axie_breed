@@ -1,6 +1,6 @@
 '''
 This script will connect to Axie Sales URL and retreive data as JSON. The data is sanitized and inserted
-in an existing POSTGRES database table
+in a connect postgres glcoud database instance
 '''
 
 import psycopg2
@@ -79,7 +79,7 @@ sql_string = sql_string[:-2] + ";"
 
 try:
     # declare a new PostgreSQL connection object
-    conn = psycopg2.connect(dbname="", user="postgres", password="")
+    conn = psycopg2.connect(dbname="axie-data", user="axieDataAdmin", password="AxieInsights#1", host="35.225.243.143")
     # create cursor
     cur = conn.cursor()
     print("\ncreated cursor object:", cur)
