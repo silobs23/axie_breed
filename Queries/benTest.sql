@@ -1,3 +1,5 @@
-select backd, hornd, mouthd, taild, class, AVG(price) as avgprice, count(backd) as sales from sales
+select backd, hornd, mouthd, taild, class, AVG(price) as avgprice, count(backd) as sales
+FROM sales
 group by backd, hornd, mouthd, taild, class
-order by avgprice desc
+having avg(price) >= 0.11
+order by sales desc
