@@ -1,0 +1,11 @@
+>> SQL Queries
+
+
+>> swap out 'backd' for any other body part. This query should group by type of part and class and order by highest price. Does not have a volume filter
+
+select backd, class, AVG(price) as avgprice from sales
+group by backd, class
+order by avgprice desc
+
+
+
