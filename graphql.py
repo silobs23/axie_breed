@@ -28,6 +28,48 @@ fragment AxieSettledBrief on Axie {
   class
   breedCount
   __typename
+  parts {
+    ...AxiePart
+    __typename
+  }
+  stats {
+    ...AxieStats
+    __typename
+  }
+}
+
+fragment AxiePart on AxiePart {
+  id
+  name
+  class
+  type
+  specialGenes
+  stage
+  abilities {
+    ...AxieCardAbility
+    __typename
+  }
+  __typename
+}
+
+fragment AxieCardAbility on AxieCardAbility {
+  id
+  name
+  attack
+  defense
+  energy
+  description
+  backgroundUrl
+  effectIconUrl
+  __typename
+}
+
+fragment AxieStats on AxieStats {
+  hp
+  speed
+  skill
+  morale
+  __typename
 }
 
 fragment TransferHistoryInSettledAuction on TransferRecords {
