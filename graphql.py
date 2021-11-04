@@ -2,15 +2,73 @@ import json
 import requests
 
 
+testQuery = """
+query GetRecentlyAxiesSold($from: Int, $size: Int) {
+  settledAuctions {
+    axies(from: $from, size: $size) {
+      total
+      results {
+        ...AxieSettledBrief
+        transferHistory {
+          ...TransferHistoryInSettledAuction
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}
+
+fragment AxieSettledBrief on Axie {
+  id
+  name
+  image
+  class
+  breedCount
+  __typename
+}
+
+fragment TransferHistoryInSettledAuction on TransferRecords {
+  total
+  results {
+    ...TransferRecordInSettledAuction
+    __typename
+  }
+  __typename
+}
+
+fragment TransferRecordInSettledAuction on TransferRecord {
+  from
+  to
+  txHash
+  timestamp
+  withPrice
+  withPriceUsd
+  fromProfile {
+    name
+    __typename
+  }
+  toProfile {
+    name
+    __typename
+  }
+  __typename
+}
+
+"""
+
 # Gets the latest Axies sold
 url = "https://graphql-gateway.axieinfinity.com/graphql"
 post = {
   "operationName": "GetRecentlyAxiesSold",
   "variables": {
-    "from": 0,
-    "size": 50
+    "from": 100000,
+    "size": 100
   },
-  "query": "query GetRecentlyAxiesSold($from: Int, $size: Int) {\n  settledAuctions {\n    axies(from: $from, size: $size) {\n      total\n      results {\n        ...AxieSettledBrief\n        transferHistory {\n          ...TransferHistoryInSettledAuction\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment AxieSettledBrief on Axie {\n  id\n  name\n  image\n  class\n  breedCount\n  __typename\n}\n\nfragment TransferHistoryInSettledAuction on TransferRecords {\n  total\n  results {\n    ...TransferRecordInSettledAuction\n    __typename\n  }\n  __typename\n}\n\nfragment TransferRecordInSettledAuction on TransferRecord {\n  from\n  to\n  txHash\n  timestamp\n  withPrice\n  withPriceUsd\n  fromProfile {\n    name\n    __typename\n  }\n  toProfile {\n    name\n    __typename\n  }\n  __typename\n}\n"
+  "query": testQuery,
+  # "query": "query GetRecentlyAxiesSold($from: Int, $size: Int) {\n  settledAuctions {\n    axies(from: $from, size: $size) {\n      total\n      results {\n        ...AxieSettledBrief\n        transferHistory {\n          ...TransferHistoryInSettledAuction\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment AxieSettledBrief on Axie {\n  id\n  name\n  class\n  breedCount\n stage\n  __typename\n}\n\nfragment TransferHistoryInSettledAuction on TransferRecords {\n  total\n  results {\n    ...TransferRecordInSettledAuction\n    __typename\n  }\n  __typename\n}\n\nfragment TransferRecordInSettledAuction on TransferRecord {\n  from\n  to\n  txHash\n  timestamp\n  withPrice\n  withPriceUsd\n  fromProfile {\n    name\n    __typename\n  }\n  toProfile {\n    name\n    __typename\n  }\n  __typename\n}\n"
 }
 
 r = requests.post(url, post)
@@ -19,6 +77,7 @@ print(type(res))
 with open('axiedata.json', 'w') as f:
   json.dump(res, f)
 
+print(res)
 
 
 # Get Axie info
