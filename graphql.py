@@ -1,4 +1,5 @@
-
+import json
+import requests
 
 url = "https://graphql-gateway.axieinfinity.com/graphql"
 post = {
