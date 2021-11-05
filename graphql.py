@@ -2,6 +2,10 @@ import datetime
 from datetime import datetime
 import json
 import requests
+import psycopg2
+from urllib.request import urlopen
+import json
+from psycopg2.extras import Json
 
 # query
 testQuery = """
@@ -86,10 +90,15 @@ with open('axiedata.json', 'w') as f:
 # Parse through the response JSON and store important values in a dictionary
 def get_axie_data(dictionary):
 
+    # defaults
     axie_data = dict()
 
+    # Set default datetime to now (UTC)
+    now = datetime.now()
+    sys_time = now.strftime("%Y-%m-%d %H:%M:%S")
+
     for item in dictionary['data']['settledAuctions']['axies']['results']:
-        axie_data['id'] = item['id']
+        axie_data['id'] = int(item['id'])
         axie_data['class'] = item['class']
         axie_data['hp'] = item['stats']['hp']
         axie_data['speed'] = item['stats']['speed']
@@ -135,15 +144,35 @@ def get_axie_data(dictionary):
                 # Execute SQL statement
                 execute_sql(axie_data)
 
+    return axie_data
+
 
 # Connect to database and add to table
-def execute_sql(dictionary):
-    pass
+def execute_sql(axie_sales_dict):
+    conn = psycopg2.connect(dbname="axie-data", user="axieDataAdmin", password="AxieInsights#1", host="35.225.243.143")
+    # create cursor
+    cur = conn.cursor()
+
+    cols = axie_sales_dict.keys()
+    cols_str = ", ".join(cols)
+
+    vals = [axie_sales_dict[x] for x in cols]
+    vals_str_list = ["%s"] * len(vals)
+    vals_str = ", ".join(vals_str_list)
+
+    print(axie_sales_dict)
+    print(cols_str)
+    print(vals_str)
+    cur.execute("INSERT INTO sales ({cols}) VALUES ({vals_str})".format(
+        cols=cols_str, vals_str=vals_str), vals)
+
+    cur.close()
+    conn.close()
+    print("complete")
 
 
-# Get datetime
-now = datetime.now()
-sys_time = now.strftime("%Y-%m-%d %H:%M:%S")
 # Run script
-get_axie_data(res)
+result = get_axie_data(res)
+
+print(result)
 
