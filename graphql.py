@@ -84,32 +84,38 @@ with open('axiedata.json', 'w') as f:
 # Parse through the response JSON and store important values in a dictionary
 def get_axie_data(dictionary):
 
-  axie_data = {}
+    axie_data = {}
 
-  for item in dictionary['data']['settledAuctions']['axies']['results']:
-      axie_id = item['id']
-      axie_class = item['class']
-      axie_parts = []
-      axie_history = []
+    for item in dictionary['data']['settledAuctions']['axies']['results']:
+        axie_id = item['id']
+        axie_class = item['class']
+        axie_parts = []
+        axie_history = []
 
-      for part in item['parts']:
-        axie_parts.append(part['id'])
+        for part in item['parts']:
+          axie_parts.append(part['id'])
 
-      hp = item['stats']['hp']
-      speed = item['stats']['speed']
-      skill = item['stats']['skill']
-      morale = item['stats']['morale']
+        hp = item['stats']['hp']
+        speed = item['stats']['speed']
+        skill = item['stats']['skill']
+        morale = item['stats']['morale']
 
-      for transactions in item['transferHistory']['results']:
-        timestamp = datetime.datetime.fromtimestamp(transactions['timestamp'])
-        price = (int(transactions['withPrice']) / 10 ** 18)
-        axie_history.append((timestamp, price))
+        for transactions in item['transferHistory']['results']:
+          timestamp = datetime.datetime.fromtimestamp(transactions['timestamp'])
+          price = (int(transactions['withPrice']) / 10 ** 18)
+          axie_history.append((timestamp, price))
 
-      axie_data[axie_id] = (axie_class, axie_parts, hp, speed, skill, morale, axie_history)
+        # this should be a list because a set doesn't have a garanteed order
+        axie_data[axie_id] = (axie_class, axie_parts, hp, speed, skill, morale, axie_history)
 
-  return axie_data
+    return axie_data
 
 # Print out the axie data
 data = get_axie_data(res)
 for k, v in data.items():
-  print(f"{k} : {v}")
+    print(f"{k} : {v}")
+
+
+# loop through the dictionary and add the data to the table
+
+
