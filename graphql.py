@@ -26,7 +26,6 @@ query GetRecentlyAxiesSold($from: Int, $size: Int) {
     __typename
   }
 }
-
 fragment AxieSettledBrief on Axie {
   id
   class
@@ -39,11 +38,9 @@ fragment AxieSettledBrief on Axie {
     __typename
   }
 }
-
 fragment AxiePart on AxiePart {
   id
 }
-
 fragment AxieStats on AxieStats {
   hp
   speed
@@ -51,7 +48,6 @@ fragment AxieStats on AxieStats {
   morale
   __typename
 }
-
 fragment TransferHistoryInSettledAuction on TransferRecords {
   total
   results {
@@ -60,7 +56,6 @@ fragment TransferHistoryInSettledAuction on TransferRecords {
   }
   __typename
 }
-
 fragment TransferRecordInSettledAuction on TransferRecord {
   timestamp
   withPrice
@@ -92,15 +87,15 @@ def get_axie_data(dictionary):
 
     # defaults
     axies_list = []
+    i = 0
     axie_data = dict()
 
     # Set default datetime to now (UTC)
     now = datetime.now()
     sys_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
-    i = 0
     for item in dictionary['data']['settledAuctions']['axies']['results']:
-        i += 1
+        axies_list.append(item['id'])
 
         axie_data['id'] = item['id']
         axie_data['class'] = item['class']
@@ -150,10 +145,8 @@ def get_axie_data(dictionary):
                 execute_sql(axie_data)
                 i += 1
 
-        axies_list.append(axie_data)
-        print("Total added:", i)
-
-    return axies_list
+    print("length of unique AxieID in response: ", len(axies_list))
+    print("Total rows added added:", i)
 
 
 # Connect to database and add to table
@@ -170,12 +163,8 @@ def execute_sql(axie_sales_dict):
     vals_str_actual = ", ".join(vals)
     vals_str = ", ".join(vals_str_list)
 
-    print(axie_sales_dict)
-    print(cols_str)
-    print(vals_str)
     # Generate SQL
     sql_string = f"INSERT INTO sales ({cols_str}) VALUES ({vals_str})"
-    print("SQL:", sql_string, vals)
 
     # exectue sql
     cur.execute(sql_string, vals)
@@ -183,13 +172,10 @@ def execute_sql(axie_sales_dict):
 
     cur.close()
     conn.close()
-    print("complete")
 
 
 # Run script
-result = get_axie_data(res)
-
-print(result)
-print(len(result))
-
+print("Running script... \n")
+get_axie_data(res)
+print("\n-------------------------")
 print("DONE MOTHER FUCKER")
