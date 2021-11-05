@@ -94,6 +94,9 @@ def get_axie_data(dictionary):
     now = datetime.now()
     sys_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
+    # connect to database
+    conn = psycopg2.connect(dbname="axie-data", user="axieDataAdmin", password="AxieInsights#1", host="35.225.243.143")
+
     for item in dictionary['data']['settledAuctions']['axies']['results']:
         axies_list.append(item['id'])
 
@@ -127,7 +130,7 @@ def get_axie_data(dictionary):
                 axie_data['price'] = price
 
                 # Execute SQL statement
-                execute_sql(axie_data)
+                execute_sql(axie_data, conn)
                 i += 1
 
         # add in different rows
@@ -142,18 +145,20 @@ def get_axie_data(dictionary):
                 axie_data['price'] = price
 
                 # Execute SQL statement
-                execute_sql(axie_data)
+                execute_sql(axie_data, conn)
                 i += 1
+
+    # close database
+    conn.close()
 
     print("length of unique AxieID in response: ", len(axies_list))
     print("Total rows added added:", i)
 
 
 # Connect to database and add to table
-def execute_sql(axie_sales_dict):
-    conn = psycopg2.connect(dbname="axie-data", user="axieDataAdmin", password="AxieInsights#1", host="35.225.243.143")
+def execute_sql(axie_sales_dict, db_conn):
     # create cursor
-    cur = conn.cursor()
+    cur = db_conn.cursor()
 
     cols = axie_sales_dict.keys()
     cols_str = ", ".join(cols)
@@ -168,10 +173,9 @@ def execute_sql(axie_sales_dict):
 
     # exectue sql
     cur.execute(sql_string, vals)
-    conn.commit()
+    db_conn.commit()
 
     cur.close()
-    conn.close()
 
 
 # Run script
