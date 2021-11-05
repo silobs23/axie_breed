@@ -91,14 +91,18 @@ with open('axiedata.json', 'w') as f:
 def get_axie_data(dictionary):
 
     # defaults
+    axies_list = []
     axie_data = dict()
 
     # Set default datetime to now (UTC)
     now = datetime.now()
     sys_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
+    i = 0
     for item in dictionary['data']['settledAuctions']['axies']['results']:
-        axie_data['id'] = int(item['id'])
+        i += 1
+
+        axie_data['id'] = item['id']
         axie_data['class'] = item['class']
         axie_data['hp'] = item['stats']['hp']
         axie_data['speed'] = item['stats']['speed']
@@ -129,6 +133,7 @@ def get_axie_data(dictionary):
 
                 # Execute SQL statement
                 execute_sql(axie_data)
+                i += 1
 
         # add in different rows
         elif item['transferHistory']['total'] == 1:
@@ -143,8 +148,12 @@ def get_axie_data(dictionary):
 
                 # Execute SQL statement
                 execute_sql(axie_data)
+                i += 1
 
-    return axie_data
+        axies_list.append(axie_data)
+        print("Total added:", i)
+
+    return axies_list
 
 
 # Connect to database and add to table
@@ -156,15 +165,21 @@ def execute_sql(axie_sales_dict):
     cols = axie_sales_dict.keys()
     cols_str = ", ".join(cols)
 
-    vals = [axie_sales_dict[x] for x in cols]
+    vals = [str(axie_sales_dict[x]) for x in cols]
     vals_str_list = ["%s"] * len(vals)
+    vals_str_actual = ", ".join(vals)
     vals_str = ", ".join(vals_str_list)
 
     print(axie_sales_dict)
     print(cols_str)
     print(vals_str)
-    cur.execute("INSERT INTO sales ({cols}) VALUES ({vals_str})".format(
-        cols=cols_str, vals_str=vals_str), vals)
+    # Generate SQL
+    sql_string = f"INSERT INTO sales ({cols_str}) VALUES ({vals_str})"
+    print("SQL:", sql_string, vals)
+
+    # exectue sql
+    cur.execute(sql_string, vals)
+    conn.commit()
 
     cur.close()
     conn.close()
@@ -175,4 +190,6 @@ def execute_sql(axie_sales_dict):
 result = get_axie_data(res)
 
 print(result)
+print(len(result))
 
+print("DONE MOTHER FUCKER")
