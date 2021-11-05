@@ -78,7 +78,7 @@ r = requests.post(url, post)
 res = r.json()
 # write to a file -- THIS IS FOR SCRIPT BEHAVIOR CONFIRMATION. DELETE WHEN NO LONGER NECESSARY
 with open('axiedata.json', 'w') as f:
-  json.dump(res, f)
+    json.dump(res, f)
 
 
 # Parse through the response JSON and store important values in a dictionary
@@ -93,7 +93,7 @@ def get_axie_data(dictionary):
         axie_history = []
 
         for part in item['parts']:
-          axie_parts.append(part['id'])
+            axie_parts.append(part['id'])
 
         hp = item['stats']['hp']
         speed = item['stats']['speed']
@@ -101,9 +101,9 @@ def get_axie_data(dictionary):
         morale = item['stats']['morale']
 
         for transactions in item['transferHistory']['results']:
-          timestamp = datetime.datetime.fromtimestamp(transactions['timestamp'])
-          price = (int(transactions['withPrice']) / 10 ** 18)
-          axie_history.append((timestamp, price))
+            timestamp = datetime.datetime.fromtimestamp(transactions['timestamp'])
+            price = (int(transactions['withPrice']) / 10 ** 18)
+            axie_history.append((timestamp, price))
 
         # this should be a list because a set doesn't have a garanteed order
         axie_data[axie_id] = (axie_class, axie_parts, hp, speed, skill, morale, axie_history)
