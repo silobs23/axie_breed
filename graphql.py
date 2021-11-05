@@ -1,4 +1,5 @@
 import datetime
+from datetime import datetime
 import json
 import requests
 
@@ -62,14 +63,15 @@ fragment TransferRecordInSettledAuction on TransferRecord {
   withPriceUsd
 }
 """
+
 # post request
 post = {
-  "operationName": "GetRecentlyAxiesSold",
-  "variables": {
-    "from": 0,
-    "size": 100
-  },
-  "query": testQuery,
+    "operationName": "GetRecentlyAxiesSold",
+    "variables": {
+        "from": 0,
+        "size": 100
+    },
+    "query": testQuery,
 }
 
 # Make query
@@ -84,38 +86,64 @@ with open('axiedata.json', 'w') as f:
 # Parse through the response JSON and store important values in a dictionary
 def get_axie_data(dictionary):
 
-    axie_data = {}
+    axie_data = dict()
 
     for item in dictionary['data']['settledAuctions']['axies']['results']:
-        axie_id = item['id']
-        axie_class = item['class']
+        axie_data['id'] = item['id']
+        axie_data['class'] = item['class']
+        axie_data['hp'] = item['stats']['hp']
+        axie_data['speed'] = item['stats']['speed']
+        axie_data['skill'] = item['stats']['skill']
+        axie_data['morale'] = item['stats']['morale']
+
         axie_parts = []
-        axie_history = []
 
         for part in item['parts']:
             axie_parts.append(part['id'])
 
-        hp = item['stats']['hp']
-        speed = item['stats']['speed']
-        skill = item['stats']['skill']
-        morale = item['stats']['morale']
+        axie_data['eyesd'] = axie_parts[0]
+        axie_data['earsd'] = axie_parts[1]
+        axie_data['backd'] = axie_parts[2]
+        axie_data['mouthd'] = axie_parts[3]
+        axie_data['hornd'] = axie_parts[4]
+        axie_data['taild'] = axie_parts[5]
 
-        for transactions in item['transferHistory']['results']:
-            timestamp = datetime.datetime.fromtimestamp(transactions['timestamp'])
-            price = (int(transactions['withPrice']) / 10 ** 18)
-            axie_history.append((timestamp, price))
+        if item['transferHistory']['total'] > 1:
+            for transactions in item['transferHistory']['results']:
+                if transactions['timestamp'] == 0:
+                    timestamp = sys_time
+                else:
+                    timestamp = datetime.fromtimestamp(transactions['timestamp'])
+                price = (int(transactions['withPrice']) / 10 ** 18)
+                axie_data['timestamp'] = timestamp
+                axie_data['price'] = price
 
-        # this should be a list because a set doesn't have a garanteed order
-        axie_data[axie_id] = (axie_class, axie_parts, hp, speed, skill, morale, axie_history)
+                # Execute SQL statement
+                execute_sql(axie_data)
 
-    return axie_data
+        # add in different rows
+        elif item['transferHistory']['total'] == 1:
+            for transactions in item['transferHistory']['results']:
+                if transactions['timestamp'] == 0:
+                    timestamp = sys_time
+                else:
+                    timestamp = datetime.fromtimestamp(transactions['timestamp'])
+                price = (int(transactions['withPrice']) / 10 ** 18)
+                axie_data['timestamp'] = timestamp
+                axie_data['price'] = price
 
-# Print out the axie data
-data = get_axie_data(res)
-for k, v in data.items():
-    print(f"{k} : {v}")
+                # Execute SQL statement
+                execute_sql(axie_data)
 
 
-# loop through the dictionary and add the data to the table
+# Connect to database and add to table
+def execute_sql(dictionary):
+    pass
 
+
+# Get datetime
+now = datetime.now()
+sys_time = now.strftime("%Y-%m-%d %H:%M:%S")
+# Run script
+get_axie_data(res)
 
