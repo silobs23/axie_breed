@@ -25,6 +25,7 @@ def get_axie_data(dictionary: dict) -> int:
 
         axie_data['id'] = item['id']
         axie_data['class'] = item['class']
+        axie_data['breedcount'] = item['breedCount']
         axie_data['hp'] = item['stats']['hp']
         axie_data['speed'] = item['stats']['speed']
         axie_data['skill'] = item['stats']['skill']
@@ -135,6 +136,7 @@ __typename
 fragment AxieSettledBrief on Axie {
 id
 class
+breedCount
 parts {
 ...AxiePart
 __typename
