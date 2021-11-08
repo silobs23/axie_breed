@@ -3,7 +3,6 @@ from datetime import datetime
 import requests
 import psycopg2
 import time
-import json
 
 
 # Parse through the response JSON and store important values in a dictionary
@@ -178,24 +177,29 @@ withPriceUsd
 },
 "query": testQuery,
 }
-    # Make query
-    url = "https://graphql-gateway.axieinfinity.com/graphql"
-    r = requests.post(url, post)
-    res = r.json()
-    # write to a file -- THIS IS FOR SCRIPT BEHAVIOR CONFIRMATION. DELETE WHEN NO LONGER NECESSARY
-    # with open('axiedata.json', 'w') as f:
-    #     json.dump(res, f)
-
-    print("Running script... \n")
-
     try:
-        n = get_axie_data(res)
-    except Exception as e:
-        print("failed:", e)
-        n = 0
 
-    m += n
-    print("\n-------------------------\n\n")
-    print(f"TOTAL ROWS ADDED: {m} , THESE VALUES ARE INCORRECT WHEN DUPLICATES ARE FOUND. NOT RELIABLE\n\n")
-    print("--------------------------\n\n\n\n\n\n")
+        # Make query
+        url = "https://graphql-gateway.axieinfinity.com/graphql"
+        r = requests.post(url, post)
+        res = r.json()
+        # write to a file -- THIS IS FOR SCRIPT BEHAVIOR CONFIRMATION. DELETE WHEN NO LONGER NECESSARY
+        # with open('axiedata.json', 'w') as f:
+        #     json.dump(res, f)
+
+        print("Running script... \n")
+
+        try:
+            n = get_axie_data(res)
+        except Exception as e:
+            print("failed:", e)
+            n = 0
+
+        m += n
+        print("\n-------------------------\n\n")
+        print(f"TOTAL ROWS ADDED: {m} , THESE VALUES ARE INCORRECT WHEN DUPLICATES ARE FOUND. NOT RELIABLE\n\n")
+        print("--------------------------\n\n\n\n\n\n")
+    except Exception as e:
+        print(e)
+
     time.sleep(15)
