@@ -7,7 +7,7 @@ import json
 
 
 # Parse through the response JSON and store important values in a dictionary
-def get_axie_data(dictionary):
+def get_axie_data(dictionary: dict) -> int:
 
     # defaults
     axies_list = []
@@ -31,10 +31,14 @@ def get_axie_data(dictionary):
         axie_data['skill'] = item['stats']['skill']
         axie_data['morale'] = item['stats']['morale']
 
-        axie_parts = []
+        axie_parts = []  # type: list
 
         for part in item['parts']:
             axie_parts.append(part['id'])
+
+        # catch when parts is empty and continue
+        if len(axie_parts) < 1:
+            continue
 
         axie_data['eyesd'] = axie_parts[0]
         axie_data['earsd'] = axie_parts[1]
@@ -46,7 +50,8 @@ def get_axie_data(dictionary):
         if item['transferHistory']['total'] > 1:
             for transactions in item['transferHistory']['results']:
                 if transactions['timestamp'] == 0:
-                    timestamp = sys_time
+                    print("timestamp was 0")
+                    continue
                 else:
                     timestamp = datetime.fromtimestamp(transactions['timestamp'])
                 price = (int(transactions['withPrice']) / 10 ** 18)
@@ -100,7 +105,7 @@ def execute_sql(axie_sales_dict, db_conn):
         db_conn.commit()
         cur.close()
     except Exception as e:
-        print(f"Duplicate warning!!!: {e}")
+        # print(f"Duplicate warning!!!: {e}")
         db_conn.rollback()
         cur.close()
 
@@ -108,7 +113,7 @@ def execute_sql(axie_sales_dict, db_conn):
 m = 0
 
 # Run script
-while m < 5000:
+while 1 < 2:
     # query
     testQuery = """
 query GetRecentlyAxiesSold($from: Int, $size: Int) {
@@ -178,13 +183,19 @@ withPriceUsd
     r = requests.post(url, post)
     res = r.json()
     # write to a file -- THIS IS FOR SCRIPT BEHAVIOR CONFIRMATION. DELETE WHEN NO LONGER NECESSARY
-    with open('axiedata.json', 'w') as f:
-        json.dump(res, f)
+    # with open('axiedata.json', 'w') as f:
+    #     json.dump(res, f)
 
     print("Running script... \n")
-    n = get_axie_data(res)
+
+    try:
+        n = get_axie_data(res)
+    except Exception as e:
+        print("failed:", e)
+        n = 0
+
     m += n
     print("\n-------------------------\n\n")
     print(f"TOTAL ROWS ADDED: {m} , THESE VALUES ARE INCORRECT WHEN DUPLICATES ARE FOUND. NOT RELIABLE\n\n")
     print("--------------------------\n\n\n\n\n\n")
-    time.sleep(30)
+    time.sleep(15)
