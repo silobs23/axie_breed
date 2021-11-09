@@ -1,0 +1,43 @@
+CHANGES
+=======
+
+v1.0.0
+------
+
+* add breed count
+* update
+* updates for prod
+* Update graphql.py
+* change database connection method
+* Update graphql.py
+* upload-script
+* initial upload into database test
+* Update graphql.py
+* format
+* Update graphql.py
+* format
+* format
+* Updated graphql (#1)
+* clean up request strings
+* clean up request strings
+* Update graphql.py
+* Update graphql.py
+* Create graphql.py
+* updated
+* Update and rename SQLQueries.sql to sqlqueries.sql
+* Update and rename SQLQueries to SQLQueries.sql
+* updated
+* updated
+* added queries folder and a new data source for pycharm
+* Create SQLQueries
+* Added loop to upload pages
+* Rename fetch&load to fetch&load.py
+* Rename createdb to createdb.py
+* Update createdb
+* Update fetch&load
+* Update README.md
+* Update README.md
+* Update README.md
+* Create createdb
+* Create fetch&load
+* Initial commit

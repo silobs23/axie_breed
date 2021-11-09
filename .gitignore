@@ -1,0 +1,51 @@
+# Ignore Mac System Files
+.DS_store
+
+### Python template
+# Byte-complied / optimized / DLL Files
+*/__pycache__/*
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Pytest Artifacts
+**/.pytest_cache/
+
+# Jet Brains IDE Artifacts
+**/.idea
+
+# Jupyter Notebook Artifacts
+**/.ipynb_checkpoints
+
+# Other Python Artifacts
+**/.pythonuserbase
+**/venv
+
+# Repo Outputs
+*.DS_STORE 
+
+# Unit Test Coverage
+.tox/
+
+# Visual Studio Code 
+.vscode/
