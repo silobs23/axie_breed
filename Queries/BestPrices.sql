@@ -7,8 +7,8 @@ select backd,
        PERCENTILE_CONT(0.5) WITHIN GROUP ( ORDER BY price ) AS medianprice,
        count(backd)                                         as sales
 FROM sales
-WHERE sales.timestamp >= '2021-11-8' AND class = 'Plant'
+WHERE sales.timestamp >= '2021-11-8'
 group by backd, hornd, mouthd, taild, class
-having avg(price) >= 0.11
+having avg(price) >= 0.15
 order by sales desc;
 

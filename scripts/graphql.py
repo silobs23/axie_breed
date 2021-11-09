@@ -105,10 +105,9 @@ def execute_sql(axie_sales_dict, db_conn):
         db_conn.commit()
         cur.close()
     except Exception as e:
-        # print(f"Duplicate warning!!!: {e}")
+        print(f"Error: {e}")
         db_conn.rollback()
         cur.close()
-
 
 m = 0
 
