@@ -115,7 +115,7 @@ def execute_sql(axie_sales_dict, db_conn):
         cur.close()
 
 m = 0
-schedule.every().day.at("10:15").do(notify)
+schedule.every().day.at("23:55").do(notify)
 
 # Run script
 while 1 < 2:
