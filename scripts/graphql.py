@@ -3,7 +3,12 @@ from datetime import datetime
 import requests
 import psycopg2
 import time
+import schedule
 
+
+# Scheduler for discord notifications
+def notify():
+    exec(open("notification.py").read())
 
 # Parse through the response JSON and store important values in a dictionary
 def get_axie_data(dictionary: dict) -> int:
@@ -110,9 +115,11 @@ def execute_sql(axie_sales_dict, db_conn):
         cur.close()
 
 m = 0
+schedule.every().day.at("10:15").do(notify)
 
 # Run script
 while 1 < 2:
+    schedule.run_pending()
     # query
     testQuery = """
 query GetRecentlyAxiesSold($from: Int, $size: Int) {
