@@ -21,6 +21,7 @@ def get_axie_data(dictionary: dict) -> int:
     # Set default datetime to now (UTC)
     now = datetime.now()
     sys_time = now.strftime("%Y-%m-%d %H:%M:%S")
+    my_name = "Keyur"
 
     # connect to database
     conn = psycopg2.connect(dbname="axie-data", user="axieDataAdmin", password="AxieInsights#1", host="35.225.243.143")
@@ -35,6 +36,8 @@ def get_axie_data(dictionary: dict) -> int:
         axie_data['speed'] = item['stats']['speed']
         axie_data['skill'] = item['stats']['skill']
         axie_data['morale'] = item['stats']['morale']
+        axie_data['creator'] = my_name
+        axie_data['createtime'] = sys_time
 
         axie_parts = []  # type: list
 
@@ -71,7 +74,7 @@ def get_axie_data(dictionary: dict) -> int:
         elif item['transferHistory']['total'] == 1:
             for transactions in item['transferHistory']['results']:
                 if transactions['timestamp'] == 0:
-                    timestamp = sys_time
+                    print("timestamp was 0")
                 else:
                     timestamp = datetime.fromtimestamp(transactions['timestamp'])
                 price = (int(transactions['withPrice']) / 10 ** 18)
