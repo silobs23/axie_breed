@@ -3,7 +3,7 @@ import psycopg2
 
 discord_hook = 'https://discord.com/api/webhooks/910989853657821184/DGWMllNaepRkXZv3HhwtIX22NlQK7SziY47Ff9uJjo2dOdfGXGihfGb_uTkQq3jLp_TQ'
 webhook = DiscordWebhook(url=discord_hook,
-                                 content=f"Summary of Top 3 Volume and Price by parts\n\n\n\n")
+                                 content=f"Summary of Top 3 Volume and Price by parts\n----------------------------------------\n\n\n")
 response = webhook.execute()
 
 try:
@@ -35,3 +35,4 @@ finally:
     if connection:
         cursor.close()
         connection.close()
+
