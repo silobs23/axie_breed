@@ -1,0 +1,6 @@
+Setting up and running scripts from Digital ocean
+
+Cheap and dirty method
+
+access token
+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

@@ -1,6 +1,4 @@
 requests
-datetime
 psycopg2
-time
 schedule
 discord_webhook
