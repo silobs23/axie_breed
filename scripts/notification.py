@@ -11,7 +11,7 @@ conn = psycopg2.connect(dbname="axie-data", user="axieDataAdmin", password="Axie
 # create cursor
 cur = conn.cursor()
 # execute sql
-cur.execute(f"select COUNT(id) from sales where DATE(timestamp) = '2021-{todays_date.month}-{todays_date.day}'")
+cur.execute(f"select COUNT(id) from sales where DATE(timestamp) = '2022-{todays_date.month}-{todays_date.day}'")
 # print result
 records = cur.fetchone()
 cur.close()
